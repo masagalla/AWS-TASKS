@@ -1,0 +1,170 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Build a VPC with CIDR block 198.162.0.0/16
+
+Resources:
+  APJVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: '198.162.0.0/16'
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: 'APJ-Vpc'
+
+  APJInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: APJInternetGateway
+
+
+  APJAttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+         Ref: APJVPC
+      InternetGatewayId:
+         Ref: APJInternetGateway
+
+
+  APJPubSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref APJVPC
+      CidrBlock: 198.162.0.0/24
+      AvailabilityZone: "us-east-1a"
+      Tags:
+      - Key: Name
+        Value: APJ-Pub-Sub
+
+  
+  APJPvtSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref APJVPC
+      CidrBlock: 198.162.1.0/24
+      AvailabilityZone: "us-east-1b"
+      Tags:
+      - Key: Name
+        Value: APJ-Pvt-Sub
+
+
+  APJPubRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:  
+        Ref: APJVPC
+      Tags:
+      - Key: Name
+        Value: APJ-Pub-Rt
+
+
+  APJPvtRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:  
+        Ref: APJVPC
+      Tags:
+      - Key: Name
+        Value: APJ-Pvt-Rt
+
+  APJPubSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: APJPubSubnet
+      RouteTableId:
+        Ref: APJPubRouteTable
+
+
+  APJPvtSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: APJPvtSubnet
+      RouteTableId:
+        Ref: APJPvtRouteTable
+
+
+  APJRoute:
+    Type: AWS::EC2::Route
+    DependsOn: APJAttachGateway
+    Properties:
+       RouteTableId:
+         Ref: APJPubRouteTable
+       DestinationCidrBlock: 0.0.0.0/0
+       GatewayId:
+         Ref: APJInternetGateway
+
+
+  httpSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to client host
+      VpcId: !Ref APJVPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+
+  sshSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow ssh to client host
+      VpcId: !Ref APJVPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+  
+
+  
+
+  
+    
+  
+
+  PublicInstance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: "t2.micro"
+      SubnetId: !Ref APJPubSubnet
+      ImageId: "ami-0166fe664262f664c"  
+      SecurityGroupIds:
+        - !Ref sshSecurityGroup
+        - !Ref httpSecurityGroup
+      KeyName: "ec2pair"
+      Tags:
+        - Key: Name
+          Value: "PublicInstance"
+
+
+
+  PvtlicInstance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: "t2.micro"
+      SubnetId: !Ref APJPvtSubnet
+      ImageId: "ami-0166fe664262f664c"  
+      SecurityGroupIds:
+        - !Ref sshSecurityGroup
+        - !Ref httpSecurityGroup
+      KeyName: "ec2pair"
+      Tags:
+        - Key: Name
+          Value: "PvtInstance"
+ 
