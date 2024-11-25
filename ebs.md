@@ -19,42 +19,52 @@ Step-by-Step Guide
 Step 1: Create and Attach an EBS Volume
 
 1. **Log in to the AWS Management Console** and navigate to the EC2 dashboard.
-
+    ![preview](images1/dp%20instance%20created.png)
 2. **Create an EBS Volume:**
    - Go to "Volumes" in the left sidebar.
    - Click "Create Volume."
    - Choose a type (e.g., General Purpose SSD), specify size, and select the same availability zone as your EC2 instance.
    - Click "Create Volume."
+   ![preview](images1/dp%20volume%20created.png)
+
 
 3. **Attach the EBS Volume to an EC2 Instance:**
    - Right-click the newly created volume and select "Attach Volume."
    - Choose the instance from the list and click "Attach."
-
+![preview](images1/attch%20volum.png)
+![preview](images1/attching%20volume%202.png)
 4. **Log into your EC2 instance via SSH.**
    ```bash
    ssh -i your-key.pem ec2-user@your-instance-public-dns
    ```
+   ![preview](images1/sever%20connecting.png)
 
 5. **Format and mount the EBS volume:**
    - Check available disks:
-     ```bash
+     bash
      lsblk
-     ```
+     ![preview](images1/storage%20checking.png)
+     ![preview](images1/storage%20checking2.png)
+
+     
+     
    - Format the volume (replace `/dev/xvdf` with your volume device):
-     ```bash
+     bash
      sudo mkfs -t ext4 /dev/xvdf
-     ```
+     ![preview](images1/format%20storage.png)
+     
    - Create a mount point and mount the volume:
-     ```bash
-     sudo mkdir /mnt/mydata
-     sudo mount /dev/xvdf /mnt/mydata
-     ```
+     bash
+     sudo mkdir /mnt/appdata
+     sudo mount /dev/xvdf /mnt/appdata
+     ![preview](images1/make%20folder%20app-data.png)
+     ![preview](images1/creating%20app%20data.png)
 
 6. **Ensure the volume is mounted on reboot:**
    - Add to `/etc/fstab`:
-     ```bash
+     bash
      echo '/dev/xvdf /mnt/mydata ext4 defaults,nofail 0 2' | sudo tee -a /etc/fstab
-     ```
+     ![preview](images1/storage%20mounted%20to%20app%20data.png)
 
 Step 2: Set Up Your Node.js Application
 
@@ -63,20 +73,26 @@ Step 2: Set Up Your Node.js Application
    mkdir note-app
    cd note-app
    ```
+   ![preview](images1/for%20node%20js.png)
 
 2. **Initialize a new Node.js project:**
    ```bash
    npm init -y
    ```
+   ![preview](images1/npm%20init%20-y.png)
 
 3. **Install required packages:**
    ```bash
    npm install express body-parser fs
    ```
+   ![preview](images1/install%20required%20packages.png
+   )
 
 4. **Create the server:**
    - Create a file named `server.js`:
+   ![preview](images1/create%20server%20file.png)
      ```javascript
+     
      const express = require('express');
      const bodyParser = require('body-parser');
      const fs = require('fs');
@@ -115,7 +131,9 @@ Step 2: Set Up Your Node.js Application
 
 5. **Create a simple HTML client:**
    - Create a directory named `public`, and inside it create an `index.html` file:
+   ![preview](images1/make%20public%20directory.png/)
      ```html
+     
      <!DOCTYPE html>
      <html>
      <head>
