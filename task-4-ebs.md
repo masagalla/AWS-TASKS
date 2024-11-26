@@ -132,7 +132,7 @@ Step 2: Set Up Your Node.js Application
 5. **Create a simple HTML client:**
    - Create a directory named `public`, and inside it create an `index.html` file:
    ![preview](images1/make%20public%20directory.png/)
-     ```html
+     html
      
      <!DOCTYPE html>
      <html>
@@ -175,7 +175,10 @@ Step 2: Set Up Your Node.js Application
          </script>
      </body>
      </html>
-     ```
+
+     ![preview](images1/acces%20server.png)
+     
+     
 
 Step 3: Create the Elastic Beanstalk Application
 
