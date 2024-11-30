@@ -13,21 +13,28 @@ Hosting - Vm Deploy App - Addr ? IP - LB-DNS - Custom Domain Name !!! Where ?? D
 Requirement 
 
 - Create VPC with /16 range
-![PREVIEW](MNimgs/mini_1.png)
+![preview](MNimgs/mini_1.png)
+
 - Create IGW for VPC
 ![preview](MNimgs/mini_igw_4.png)
+
 - Create Two Subnets
 ![preview](MNimgs/mini%20_pub_1.png)
+
 - Pub and Pvt
 ![preview](MNimgs/mini%20_pub_1.png)
+
 - Pub Should have 4k Ip's
 ![preview](MNimgs/ip4k.png)
+
 - Pvt Should Have 256 Ip's
 ![preview](MNimgs/ip_250.png)
 
 - Create 3 servers across diff subnets.
 ![preview](MNimgs/mini_pvt_3.png)
+
 - These servers are used for running application
+
 - Create a DB - using RDS
 
 - CODE For the Project - https://github.com/Ai-TechNov/On-Premise-Deployement.git
